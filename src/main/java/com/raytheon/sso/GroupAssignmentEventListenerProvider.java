@@ -14,7 +14,10 @@ import org.keycloak.models.utils.KeycloakModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * This class will receive events from the Keycloak server, and automatically add a user to the correct group
+ * based on their email domain.
+ */
 public class GroupAssignmentEventListenerProvider implements EventListenerProvider {
 
     private static final String GOV_GROUP_PATH = "GovUser";
@@ -33,6 +36,10 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
         this.govGroup = KeycloakModelUtils.findGroupByPath(realm, GOV_GROUP_PATH);
     }
 
+    /**
+     * This method is called when an event is triggered.
+     * @param event the event
+     */
     @Override
     public void onEvent(Event event) {
         if (event.getType() == EventType.REGISTER) {
@@ -43,6 +50,10 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
         }
     }
 
+    /**
+     * This method will add the groups when a registration event occurs
+     * @param event the event
+     */
     private void onRegistrationEvent(Event event) {
         RealmModel realm = model.getRealm(event.getRealmId());
         UserModel user = session.users().getUserById(event.getUserId(), realm);
@@ -57,12 +68,12 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
 
 
     @Override
-    public void onEvent(AdminEvent adminEvent, boolean b) {
-    }
+    public void onEvent(AdminEvent adminEvent, boolean b) { }
 
 
     @Override
     public void close() {
+        session.close();
     }
 
 
