@@ -17,7 +17,7 @@ class GroupLookupServiceTest {
         props.put("website.gov", "Group1 ");
         props.put("website.mil", " Group1,  Group2 ");
 
-        GroupLookupService svc = new GroupLookupService(props);
+        GroupLookupService svc = new PropertiesFileGroupLookupService(props);
         List<String> govDomain = svc.getGroupsForEmailDomain("john.doe@website.gov");
         List<String> milDomain = svc.getGroupsForEmailDomain("john.doe@website.mil");
 
