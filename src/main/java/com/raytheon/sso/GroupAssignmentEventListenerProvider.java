@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GroupAssignmentEventListenerProvider implements EventListenerProvider {
 
-    private static final String GOV_GROUP_PATH = "GovUser";
     private static final String REALM_NAME = "test-app";
     private static final Logger logger = LoggerFactory.getLogger(GroupAssignmentEventListenerProvider.class);
 
@@ -66,6 +65,7 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
         List<String> groups = lookupService.getGroupsForEmailDomain(userEmail);
 
         for (String groupName : groups) {
+            logger.info("Adding user {} ({}) to group {} per configuration", user.getId(), userEmail, groupName);
             GroupModel groupModel = KeycloakModelUtils.findGroupByPath(realm, groupName);
             user.joinGroup(groupModel);
         }
@@ -77,9 +77,7 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
 
 
     @Override
-    public void close() {
-        session.close();
-    }
+    public void close() { }
 
 
     private String eventToString(Event event) {
