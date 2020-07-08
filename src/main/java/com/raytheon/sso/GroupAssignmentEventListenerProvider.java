@@ -1,5 +1,6 @@
 package com.raytheon.sso;
 
+import java.util.List;
 import java.util.Map;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventListenerProvider;
@@ -26,14 +27,16 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
 
     private final KeycloakSession session;
     private final RealmProvider model;
-    private final GroupModel govGroup;
+//    private final GroupModel govGroup;
+    private RealmModel realm;
+    private final GroupLookupService lookupService;
 
-    public GroupAssignmentEventListenerProvider(KeycloakSession session) {
+    public GroupAssignmentEventListenerProvider(KeycloakSession session, GroupLookupService lookupService) {
         this.session = session;
         this.model = session.realms();
+        this.lookupService = lookupService;
 
-        RealmModel realm = session.realms().getRealm(REALM_NAME);
-        this.govGroup = KeycloakModelUtils.findGroupByPath(realm, GOV_GROUP_PATH);
+        realm = session.realms().getRealm(REALM_NAME);
     }
 
     /**
@@ -60,9 +63,11 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
 
 
         String userEmail = user.getEmail();
-        if (userEmail.endsWith(".gov") || userEmail.endsWith(".mil")) {
-            logger.info("Granting gov group access to new user {}", user.getEmail());
-            user.joinGroup(govGroup);
+        List<String> groups = lookupService.getGroupsForEmailDomain(userEmail);
+
+        for (String groupName : groups) {
+            GroupModel groupModel = KeycloakModelUtils.findGroupByPath(realm, groupName);
+            user.joinGroup(groupModel);
         }
     }
 

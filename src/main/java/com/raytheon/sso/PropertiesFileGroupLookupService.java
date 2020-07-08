@@ -3,6 +3,7 @@ package com.raytheon.sso;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class PropertiesFileGroupLookupService implements GroupLookupService {
 
 
-    private static final String PROPERTIES_FILE_NAME = "settings/group-lookup.properties";
+    private static final String PROPERTIES_FILE_NAME = "group-lookup.properties";
     private static final String EMAIL_REGEX = "^(.+)@(.+)\\.(.+)$";
     private static final Logger LOG = LoggerFactory.getLogger(GroupLookupService.class);
 
@@ -48,6 +49,10 @@ public class PropertiesFileGroupLookupService implements GroupLookupService {
         String domain = email.substring(atChar + 1);
 
         String rawGroups = config.getProperty(domain);
+        if (rawGroups == null) {
+            return Collections.emptyList();
+        }
+
         List<String> groups = Arrays.asList(rawGroups.split(","));
         groups.replaceAll(String::trim);
 

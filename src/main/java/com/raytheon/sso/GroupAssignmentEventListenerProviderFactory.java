@@ -15,13 +15,17 @@ public class GroupAssignmentEventListenerProviderFactory implements EventListene
 
     private static final String EVENT_LISTENER_NAME = "group-assignment-event-listener";
 
+    private GroupLookupService lookupService;
+
     @Override
     public EventListenerProvider create(KeycloakSession keycloakSession) {
-        return new GroupAssignmentEventListenerProvider(keycloakSession);
+        return new GroupAssignmentEventListenerProvider(keycloakSession, lookupService);
     }
 
     @Override
-    public void init(Scope scope) { }
+    public void init(Scope scope) {
+        lookupService = new PropertiesFileGroupLookupService();
+    }
 
     @Override
     public void postInit(KeycloakSessionFactory keycloakSessionFactory) { }

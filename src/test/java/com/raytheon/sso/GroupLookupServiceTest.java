@@ -20,9 +20,11 @@ class GroupLookupServiceTest {
         GroupLookupService svc = new PropertiesFileGroupLookupService(props);
         List<String> govDomain = svc.getGroupsForEmailDomain("john.doe@website.gov");
         List<String> milDomain = svc.getGroupsForEmailDomain("john.doe@website.mil");
+        List<String> unlistedDomain = svc.getGroupsForEmailDomain("john.doe@gmail.com");
 
         assertArrayEquals(new String[] {"Group1"}, govDomain.toArray(TYPE_HOLDER));
         assertArrayEquals(new String[] {"Group1", "Group2"}, milDomain.toArray(TYPE_HOLDER));
+        assertArrayEquals(new String[0], unlistedDomain.toArray(TYPE_HOLDER));
         assertThrows(IllegalArgumentException.class, () -> svc.getGroupsForEmailDomain("not an email address"));
     }
 }
