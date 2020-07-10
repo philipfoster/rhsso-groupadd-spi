@@ -3,6 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <name>rhsso-extensions</name>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.raytheon.sso</groupId>
   <artifactId>rhsso-extensions</artifactId>
@@ -30,8 +31,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <skipDeployment>true</skipDeployment>
 <!--    <version.org.keycloak>9.0.3.redhat-00002</version.org.keycloak>-->
 <!--    <version.org.jboss.logging>3.3.0.Final</version.org.jboss.logging>-->
+    <deploy.jboss.host>localhost</deploy.jboss.host>
+    <deploy.jboss.port>8080</deploy.jboss.port>
+    <deploy.jboss.user>user</deploy.jboss.user>
+    <deploy.jboss.password>password</deploy.jboss.password>
   </properties>
 
   <dependencies>
@@ -84,6 +90,21 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.wildfly.plugins</groupId>
+        <artifactId>wildfly-maven-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <hostname>${deploy.jboss.host}</hostname>
+          <port>${deploy.jboss.port}</port>
+          <username>${deploy.jboss.user}</username>
+          <password>${deploy.jboss.password}</password>
+          <name>${project.name}</name>
+          <filename>${project.build.finalName}.jar</filename>
+          <skip>${skipDeployment}</skip>
         </configuration>
       </plugin>
     </plugins>
