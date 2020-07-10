@@ -31,6 +31,7 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
     private final GroupLookupService lookupService;
 
     public GroupAssignmentEventListenerProvider(KeycloakSession session, GroupLookupService lookupService) {
+        logger.info("asdf");
         this.session = session;
         this.model = session.realms();
         this.lookupService = lookupService;
