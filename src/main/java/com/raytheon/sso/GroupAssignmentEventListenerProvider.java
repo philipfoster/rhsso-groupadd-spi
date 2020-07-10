@@ -1,7 +1,10 @@
 package com.raytheon.sso;
 
+import com.raytheon.sso.conf.AppConfiguration;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventType;
@@ -21,22 +24,18 @@ import org.slf4j.LoggerFactory;
  */
 public class GroupAssignmentEventListenerProvider implements EventListenerProvider {
 
-    private static final String REALM_NAME = "test-app";
     private static final Logger logger = LoggerFactory.getLogger(GroupAssignmentEventListenerProvider.class);
 
     private final KeycloakSession session;
     private final RealmProvider model;
-//    private final GroupModel govGroup;
-    private RealmModel realm;
     private final GroupLookupService lookupService;
+    private final AppConfiguration config;
 
-    public GroupAssignmentEventListenerProvider(KeycloakSession session, GroupLookupService lookupService) {
-        logger.info("asdf");
+    public GroupAssignmentEventListenerProvider(KeycloakSession session, GroupLookupService lookupService, AppConfiguration config) {
         this.session = session;
         this.model = session.realms();
         this.lookupService = lookupService;
-
-        realm = session.realms().getRealm(REALM_NAME);
+        this.config = config;
     }
 
     /**
@@ -61,14 +60,24 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
         RealmModel realm = model.getRealm(event.getRealmId());
         UserModel user = session.users().getUserById(event.getUserId(), realm);
 
-
         String userEmail = user.getEmail();
-        List<String> groups = lookupService.getGroupsForEmailDomain(userEmail);
+        List<String> domainGroups = lookupService.getGroupsForEmailDomain(userEmail);
+        List<String> tldGroups = lookupService.getGroupsForEmailTld(userEmail);
 
-        for (String groupName : groups) {
-            logger.info("Adding user {} ({}) to group {} per configuration", user.getId(), userEmail, groupName);
-            GroupModel groupModel = KeycloakModelUtils.findGroupByPath(realm, groupName);
-            user.joinGroup(groupModel);
+        List<String> allGroups = Stream.concat(domainGroups.stream(), tldGroups.stream())
+            .distinct()
+            .collect(Collectors.toList());
+
+        if (allGroups.isEmpty() && config.unlistedRequiresManualApproval()) {
+            // If the manual approval feature is enabled, and the user is not a member of any groups, disable their account.
+            // TODO: Find some way to alert a system admin that a user needs to be approved (?)
+            user.setEnabled(false);
+        } else {
+            for (String groupName : allGroups) {
+                logger.info("Adding user {} ({}) to group {} per configuration", user.getId(), userEmail, groupName);
+                GroupModel groupModel = KeycloakModelUtils.findGroupByPath(realm, groupName);
+                user.joinGroup(groupModel);
+            }
         }
     }
 

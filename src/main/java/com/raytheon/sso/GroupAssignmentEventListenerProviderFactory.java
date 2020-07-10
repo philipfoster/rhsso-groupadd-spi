@@ -1,5 +1,6 @@
 package com.raytheon.sso;
 
+import com.raytheon.sso.conf.AppConfiguration;
 import org.keycloak.Config.Scope;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventListenerProviderFactory;
@@ -16,14 +17,16 @@ public class GroupAssignmentEventListenerProviderFactory implements EventListene
     private static final String EVENT_LISTENER_NAME = "group-assignment-event-listener";
 
     private GroupLookupService lookupService;
+    private AppConfiguration config;
 
     @Override
     public EventListenerProvider create(KeycloakSession keycloakSession) {
-        return new GroupAssignmentEventListenerProvider(keycloakSession, lookupService);
+        return new GroupAssignmentEventListenerProvider(keycloakSession, lookupService, config);
     }
 
     @Override
     public void init(Scope scope) {
+        config = new AppConfiguration();
         lookupService = new PropertiesFileGroupLookupService();
     }
 
