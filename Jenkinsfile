@@ -31,7 +31,7 @@ pipeline {
         }
 
         stage ('Deploy') {
-            steps {
+//            steps {
                 // To run on linux, change "bat" to "sh"
 //                withCredentials([usernamePassword(credentialsId: "${JBOSS_SERVER_SECRET}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
 //                    bat "mvn jboss-as:deploy -Ddeploy.jboss.host=ec2-3-130-236-137.us-east-2.compute.amazonaws.com -Ddeploy.jboss.port=9990 -Ddeploy.jboss.user=${USERNAME} -Ddeploy.jboss.password=${PASSWORD}"
@@ -42,7 +42,7 @@ pipeline {
                 sshAgent(["nvs-philip"]) {
                     bat "scp target/rhsso-extensions-1.0-SNAPSHOT.jar ec2-user@ec2-18-218-223-97.us-east-2.compute.amazonaws.com:/home/ec2-user/rh-sso-7.4/standalone/deployments"
                 }
-            }
+//            }
         }
     }
 
