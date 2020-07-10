@@ -59,4 +59,26 @@ public class PropertiesFileGroupLookupService implements GroupLookupService {
         return groups;
     }
 
+    @Override
+    public List<String> getGroupsForEmailTld(String email) {
+        if (!email.matches(EMAIL_REGEX)) {
+            throw new IllegalArgumentException("Illegal email address " + email);
+        }
+
+        int atIdx = email.indexOf('@');
+        String domain = email.substring(atIdx + 1);
+        int dotIdx = domain.indexOf('.');
+        String tld = domain.substring(dotIdx);
+
+        String rawGroups = config.getProperty(tld);
+        if (rawGroups == null) {
+            return Collections.emptyList();
+        }
+
+        List<String> groups = Arrays.asList(rawGroups.split(","));
+        groups.replaceAll(String::trim);
+
+        return groups;
+    }
+
 }

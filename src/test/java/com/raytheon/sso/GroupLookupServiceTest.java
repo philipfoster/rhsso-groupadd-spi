@@ -29,6 +29,19 @@ class GroupLookupServiceTest {
     }
 
     @Test
+    void getGroupsForTld() {
+        Properties props = new Properties();
+        props.put(".gov", "Group1 ");
+
+        GroupLookupService svc = new PropertiesFileGroupLookupService(props);
+        List<String> govDomain = svc.getGroupsForEmailTld("john.doe@website.gov");
+
+        assertArrayEquals(new String[] {"Group1"}, govDomain.toArray(TYPE_HOLDER));
+        assertThrows(IllegalArgumentException.class, () -> svc.getGroupsForEmailTld("not an email address"));
+
+    }
+
+    @Test
     void fileLoad() {
         GroupLookupService svc = new PropertiesFileGroupLookupService();
         List<String> govDomain = svc.getGroupsForEmailDomain("john.doe@website.gov");
