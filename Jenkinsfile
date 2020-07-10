@@ -27,8 +27,8 @@ pipeline {
 ////                    bat "scp target/rhsso-extensions-1.0-SNAPSHOT.jar ${USERNAME}@ec2-18-218-223-97.us-east-2.compute.amazonaws.com:/home/ec2-user/rh-sso-7.4/standalone/deployments"
 //                }
 
-                sshagent(["nvs-philip"]) {
-                    sh "scp ./target/rhsso-extensions-1.0-SNAPSHOT.jar ec2-3-130-236-137.us-east-2.compute.amazonaws.com:/home/ec2-user/rh-sso-7.4/standalone/deployments"
+                sshagent(credentials : ["nvs-philip"]) {
+                    sh "scp ./target/rhsso-extensions-1.0-SNAPSHOT.jar ec2-user@ec2-3-130-236-137.us-east-2.compute.amazonaws.com:/home/ec2-user/rh-sso-7.4/standalone/deployments"
                 }
             }
         }
