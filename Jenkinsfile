@@ -33,7 +33,7 @@ pipeline {
             steps {
                 // To run on linux, change "bat" to "sh"
                 withCredentials([usernamePassword(credentialsId: "${JBOSS_SERVER_SECRET}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat "mvn wildfly:deploy -Ddeploy.jboss.host=${params.jboss_host} -Ddeploy.jboss.port=${params.jboss_port} -Ddeploy.jboss.user=${USERNAME} -Ddeploy.jboss.password=${PASSWORD}"
+                    bat "mvn jboss-as:deploy -Ddeploy.jboss.host=${params.jboss_host} -Ddeploy.jboss.port=${params.jboss_port} -Ddeploy.jboss.user=${USERNAME} -Ddeploy.jboss.password=${PASSWORD}"
                 }
             }
         }
