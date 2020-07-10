@@ -20,6 +20,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 sshagent(credentials : ["nvs-philip"]) {
+                    sh "ls -la"
                     sh "scp -o StrictHostKeyChecking=no ./target/rhsso-extensions-1.0-SNAPSHOT.jar ec2-user@ec2-3-130-236-137.us-east-2.compute.amazonaws.com:/home/ec2-user/rh-sso-7.4/standalone/deployments/rhsso-extensions.jar"
                 }
             }
