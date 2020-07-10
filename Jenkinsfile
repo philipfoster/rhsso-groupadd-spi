@@ -5,11 +5,11 @@ pipeline {
 
     parameters {
         string(
-                name: 'jboss_host',
+                name: 'JBOSS_HOST',
                 description: "The hostname of the JBoss server to deploy to"
         )
         string(
-                name: 'jboss_port',
+                name: 'JBOSS_PORT',
                 description: "The port of the JBoss server to deploy to"
         )
     }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 // To run on linux, change "bat" to "sh"
                 withCredentials([usernamePassword(credentialsId: "${JBOSS_SERVER_SECRET}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat "mvn jboss-as:deploy -Ddeploy.jboss.host=${params.jboss_host} -Ddeploy.jboss.port=${params.jboss_port} -Ddeploy.jboss.user=${USERNAME} -Ddeploy.jboss.password=${PASSWORD}"
+                    bat "mvn jboss-as:deploy -Ddeploy.jboss.host=${JBOSS_HOST} -Ddeploy.jboss.port=${JBOSS_PORT} -Ddeploy.jboss.user=${USERNAME} -Ddeploy.jboss.password=${PASSWORD}"
                 }
             }
         }
