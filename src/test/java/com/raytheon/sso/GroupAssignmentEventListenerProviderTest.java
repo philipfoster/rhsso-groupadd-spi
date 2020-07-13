@@ -103,7 +103,7 @@ class GroupAssignmentEventListenerProviderTest {
         // invoke method to test
         provider.onEvent(inputEvent);
 
-        // validate that the user account is disabled
+        /// validate that the user account is not disabled
         verify(userModel, times(0)).setEnabled(anyBoolean());
 
         // verify that user is not added to any groups
@@ -147,7 +147,7 @@ class GroupAssignmentEventListenerProviderTest {
         // invoke method to test
         provider.onEvent(inputEvent);
 
-        // validate that the user account is disabled
+        // validate that the user account is not disabled
         verify(userModel, times(0)).setEnabled(anyBoolean());
 
         // verify that user is added to 2 groups
@@ -191,7 +191,7 @@ class GroupAssignmentEventListenerProviderTest {
         // invoke method to test
         provider.onEvent(inputEvent);
 
-        // validate that the user account is disabled
+        // validate that the user account is not disabled
         verify(userModel, times(0)).setEnabled(anyBoolean());
 
         // verify that user is added to 2 groups
