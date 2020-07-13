@@ -2,7 +2,6 @@ package com.raytheon.sso;
 
 import com.raytheon.sso.conf.AppConfiguration;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.keycloak.events.Event;
@@ -45,10 +44,10 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
     @Override
     public void onEvent(Event event) {
         if (event.getType() == EventType.REGISTER) {
-            logger.debug("Received registration event {}", eventToString(event));
+            logger.debug("Received registration event {}", event.toString());
             onRegistrationEvent(event);
         } else {
-            logger.trace("Received non-registration event {}", eventToString(event));
+            logger.trace("Received non-registration event {}", event.toString());
         }
     }
 
@@ -83,47 +82,12 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
 
 
     @Override
-    public void onEvent(AdminEvent adminEvent, boolean b) { }
+    public void onEvent(AdminEvent adminEvent, boolean b) {
+        logger.trace("Received admin event {}", adminEvent.toString());
+    }
 
 
     @Override
     public void close() { }
 
-
-    private String eventToString(Event event) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("type=");
-        sb.append(event.getType());
-        sb.append(", realmId=");
-        sb.append(event.getRealmId());
-        sb.append(", clientId=");
-        sb.append(event.getClientId());
-        sb.append(", userId=");
-        sb.append(event.getUserId());
-        sb.append(", ipAddress=");
-        sb.append(event.getIpAddress());
-
-        if (event.getError() != null) {
-            sb.append(", error=");
-            sb.append(event.getError());
-        }
-
-        if (event.getDetails() != null) {
-            for (Map.Entry<String, String> e : event.getDetails().entrySet()) {
-                sb.append(", ");
-                sb.append(e.getKey());
-                if (e.getValue() == null || e.getValue().indexOf(' ') == -1) {
-                    sb.append("=");
-                    sb.append(e.getValue());
-                } else {
-                    sb.append("='");
-                    sb.append(e.getValue());
-                    sb.append("'");
-                }
-            }
-        }
-
-        return sb.toString();
-    }
 }

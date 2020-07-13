@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventType;
+import org.keycloak.events.admin.AdminEvent;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RealmProvider;
@@ -66,6 +67,7 @@ class GroupAssignmentEventListenerProviderTest {
         // verify that user is not added to any groups
         verify(userModel, times(0)).joinGroup(any());
 
+        provider.close();
     }
 
     @Test
@@ -108,6 +110,8 @@ class GroupAssignmentEventListenerProviderTest {
 
         // verify that user is not added to any groups
         verify(userModel,  times(0)).joinGroup(any());
+
+        provider.close();
 
     }
 
@@ -153,6 +157,7 @@ class GroupAssignmentEventListenerProviderTest {
         // verify that user is added to 2 groups
         verify(userModel, times(2)).joinGroup(any());
 
+        provider.close();
     }
 
 
@@ -197,6 +202,21 @@ class GroupAssignmentEventListenerProviderTest {
         // verify that user is added to 2 groups
         verify(userModel, times(2)).joinGroup(any());
 
+        provider.close();
+    }
+
+    @Test
+    void testOnAdminEvent() {
+        KeycloakSession session = mock(KeycloakSession.class);
+        GroupLookupService lookupService = mock(GroupLookupService.class);
+        AppConfiguration config = mock(AppConfiguration.class);
+
+        GroupAssignmentEventListenerProvider provider = new GroupAssignmentEventListenerProvider(session, lookupService, config);
+        AdminEvent event = mock(AdminEvent.class);
+
+        provider.onEvent(event, false);
+
+        provider.close();
     }
 
 

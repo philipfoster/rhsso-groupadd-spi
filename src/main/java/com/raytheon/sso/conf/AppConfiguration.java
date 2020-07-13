@@ -8,7 +8,7 @@ public class AppConfiguration {
 
     private static final String PROPERTIES_FILE_NAME = "config.properties";
     private static final String UNLISTED_APPROVAL_PROP = "unlisted_manual_approval";
-    private Properties config;
+    private final Properties config;
 
     public AppConfiguration() {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {

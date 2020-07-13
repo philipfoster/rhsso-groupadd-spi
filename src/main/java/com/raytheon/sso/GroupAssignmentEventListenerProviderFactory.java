@@ -19,6 +19,15 @@ public class GroupAssignmentEventListenerProviderFactory implements EventListene
     private GroupLookupService lookupService;
     private AppConfiguration config;
 
+    public GroupAssignmentEventListenerProviderFactory(GroupLookupService lookupService, AppConfiguration config) {
+        this.lookupService = lookupService;
+        this.config = config;
+    }
+
+    public GroupAssignmentEventListenerProviderFactory() {
+        this(new PropertiesFileGroupLookupService(), new AppConfiguration());
+    }
+
     @Override
     public EventListenerProvider create(KeycloakSession keycloakSession) {
         return new GroupAssignmentEventListenerProvider(keycloakSession, lookupService, config);
@@ -26,15 +35,17 @@ public class GroupAssignmentEventListenerProviderFactory implements EventListene
 
     @Override
     public void init(Scope scope) {
-        config = new AppConfiguration();
-        lookupService = new PropertiesFileGroupLookupService();
     }
 
     @Override
-    public void postInit(KeycloakSessionFactory keycloakSessionFactory) { }
+    public void postInit(KeycloakSessionFactory factory) {
+
+    }
 
     @Override
-    public void close() { }
+    public void close() {
+
+    }
 
     /**
      * Defines the event listener name for the server.
