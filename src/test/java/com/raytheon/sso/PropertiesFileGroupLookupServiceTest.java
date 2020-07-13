@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
-class GroupLookupServiceTest {
+class PropertiesFileGroupLookupServiceTest {
 
     private static final String[] TYPE_HOLDER = new String[0];
 

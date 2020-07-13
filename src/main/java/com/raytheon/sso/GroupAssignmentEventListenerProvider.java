@@ -63,7 +63,7 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
         String userEmail = user.getEmail();
         List<String> domainGroups = lookupService.getGroupsForEmailDomain(userEmail);
         List<String> tldGroups = lookupService.getGroupsForEmailTld(userEmail);
-
+        
         List<String> allGroups = Stream.concat(domainGroups.stream(), tldGroups.stream())
             .distinct()
             .collect(Collectors.toList());
