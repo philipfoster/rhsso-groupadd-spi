@@ -45,7 +45,7 @@ public class PropertiesFileGroupLookupService implements GroupLookupService {
             throw new IllegalArgumentException("Illegal email address " + email);
         }
 
-        int atChar = email.indexOf('@');
+        int atChar = email.lastIndexOf('.');
         String domain = email.substring(atChar + 1);
 
         String rawGroups = config.getProperty(domain);
