@@ -28,6 +28,8 @@ public class PropertiesFileGroupLookupService implements GroupLookupService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to read configuration", e);
         }
+
+        LOG.info("Loaded configuration: {}", config);
     }
 
     /**

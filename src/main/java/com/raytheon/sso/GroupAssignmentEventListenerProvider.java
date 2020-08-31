@@ -21,22 +21,16 @@ import org.slf4j.LoggerFactory;
  */
 public class GroupAssignmentEventListenerProvider implements EventListenerProvider {
 
-    private static final String REALM_NAME = "test-app";
     private static final Logger logger = LoggerFactory.getLogger(GroupAssignmentEventListenerProvider.class);
 
     private final KeycloakSession session;
     private final RealmProvider model;
-//    private final GroupModel govGroup;
-    private RealmModel realm;
     private final GroupLookupService lookupService;
 
     public GroupAssignmentEventListenerProvider(KeycloakSession session, GroupLookupService lookupService) {
-        logger.info("asdf");
         this.session = session;
         this.model = session.realms();
         this.lookupService = lookupService;
-
-        realm = session.realms().getRealm(REALM_NAME);
     }
 
     /**
@@ -61,12 +55,11 @@ public class GroupAssignmentEventListenerProvider implements EventListenerProvid
         RealmModel realm = model.getRealm(event.getRealmId());
         UserModel user = session.users().getUserById(event.getUserId(), realm);
 
-
         String userEmail = user.getEmail();
         List<String> groups = lookupService.getGroupsForEmailDomain(userEmail);
 
         for (String groupName : groups) {
-            logger.info("Adding user {} ({}) to group {} per configuration", user.getId(), userEmail, groupName);
+            logger.info("Auto Assignment triggered :: User auto assigned to rule based on custom defined rule");
             GroupModel groupModel = KeycloakModelUtils.findGroupByPath(realm, groupName);
             user.joinGroup(groupModel);
         }
