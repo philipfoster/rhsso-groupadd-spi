@@ -13,7 +13,7 @@
   <parent>
     <groupId>org.keycloak</groupId>
     <artifactId>keycloak-parent</artifactId>
-    <version>9.0.3.redhat-00002</version>
+    <version>9.0.9.redhat-00001</version>
   </parent>
 
 
